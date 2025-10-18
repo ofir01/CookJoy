@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Star Wars</title>
+</head>
+
+<body>
+
+  <!-- חיפוש-->
+  <nav id="navSearch" class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <img id="icon">
+      <!-- כפתור תפריט למסכים קטנים -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a id="AdvancedSearch" class="nav-link" href="#">Advanced search</a>
+          </li>
+        </ul>
+        <form id="formSearch" class="d-flex" role="search">
+          <input id="Search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ניווט של העמוד -->
+  <nav class="ms-3 mt-3 fw-bold"
+    style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='white'/%3E%3C/svg%3E&#34;);"
+    aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item "><a href="/">Home</a></li>
+    </ol>
+  </nav>
+
+  <div></div>
+
+  <!-- חיפוש מעמיק -->
+  <div id="divAdvancedSearch" class="d-flex justify-content-center align-items-center min-vh-100 d-none">
+    <form id="formAdvancedSearch" class="p-4 border rounded bg-light shadow" style="max-width: 500px; width: 100%;">
+      <fieldset>
+        <legend class="mb-4 text-center fw-bold">Advanced Search - Character</legend>
+
+        <!-- גובה -->
+        <div class="mb-3">
+          <label for="height" class="form-label">Height (cm)</label>
+          <input type="number" class="form-control" id="height" name="height" placeholder="לדוגמה: 180">
+        </div>
+
+        <!-- צבע עור -->
+        <div class="mb-3">
+          <label for="skin_color" class="form-label">skin_color</label>
+          <input type="text" class="form-control" id="skin_color" name="skin_color" placeholder="לדוגמה: fair">
+        </div>
+
+        <!-- צבע שיער -->
+        <div class="mb-3">
+          <label for="hair_color" class="form-label">hair_color</label>
+          <input type="text" class="form-control" id="hair_color" name="hair_color" placeholder="לדוגמה: blond">
+        </div>
+
+        <!-- מין -->
+        <div class="mb-3">
+          <label class="form-label d-block">Gender</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="male" value="male">
+            <label class="form-check-label" for="male">male</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+            <label class="form-check-label" for="female">Female</label>
+          </div>
+        </div>
+
+        <!-- כפתור -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+
+
+
+  <!-- כרטיסיות -->
+  <div id="resulte" class="container text-center "></div>
+
+
+
+
+
+</body>
+
+</html>

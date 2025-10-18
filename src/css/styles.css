@@ -1,0 +1,54 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+body {
+    background-image: url('/src/img/background.png');
+background-size: cover;     /* מכסה את כל הדיב */
+  background-position: center; /* ממורכז */
+  background-repeat: no-repeat; /* לא לחזור */
+
+}
+
+#navSearch {
+    opacity: 0.8;
+
+}
+
+#icon {
+    width: 100px;
+    height: 100px;
+    background-image: url('/src/img/icon.png');
+    background-size: cover;
+    /* מתאים את התמונה לגודל הדיב */
+    background-position: center;
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    /* מעט הגדלה */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    /* צל בולט */
+}
+
+
+#resulte,
+#movies,
+#movie_characters {
+    opacity: 0.6;
+}
+
+.breadcrumb {
+    opacity: 1;
+}
+
+/* קישורים ופריטים פעילים */
+.breadcrumb a,
+.breadcrumb-item.active {
+    color: white;
+}
+
+
+
