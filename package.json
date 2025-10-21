@@ -1,12 +1,10 @@
 {
-  "name": "starwars",
+  "name": "movienest",
   "version": "1.0.0",
   "main": "index.js",
-  "homepage": "https://ofir01.github.io/webpack-bootstrap-project/",
   "scripts": {
     "start": "webpack serve",
     "build": "webpack --mode production",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "gh-pages -d dist"
   },
   "keywords": [],
@@ -17,17 +15,14 @@
     "autoprefixer": "^10.4.21",
     "css-loader": "^7.1.2",
     "gh-pages": "^6.3.0",
+    "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.4",
     "postcss-loader": "^8.2.0",
-    "sass": "^1.92.1",
+    "sass": "^1.93.2",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
-  },
-  "dependencies": {
-    "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.8"
   }
 }

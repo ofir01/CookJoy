@@ -1,0 +1,110 @@
+
+#sliderContainer {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    background-color: #FFF4E6;
+}
+
+#h1slider {
+  background-color: #FFE3C1;
+  color: #D35400;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 10px;
+  margin: 0px;
+}
+
+.slider {
+    margin: 20px;
+    display: flex;
+    animation: slideLeft 12s linear infinite;
+    gap: 30px;
+}
+
+@keyframes slideLeft {
+    0% {
+        transform: translateX(150%);
+    }
+    100% {
+        transform: translateX(-105%);
+    }
+}
+
+.slider:hover {
+    animation-play-state: paused;
+}
+
+.buttonSliderRecipes {
+    width: 200px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    background: white;
+    transition: transform 0.3s ease; /* מעבר חלק */
+}
+
+.buttonSliderRecipes:hover {
+    transform: scale(1.1); /* מגדיל רק את הכרטיס */
+}
+
+.slider-recipe-img {
+    width: 100%;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.slider-recipe-title {
+    font-family: 'Chewy', cursive;
+    font-size: 14px;
+    text-align: center;
+    padding: 0px 5px;
+}
+
+
+/*
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.chase-animation {
+    position: relative;
+    width: 300px;
+    height: 100px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.chef, .food {
+    font-size: 48px;
+    position: absolute;
+    bottom: 0;
+}
+
+.chef {
+    animation: runChef 3s linear infinite;
+}
+
+.food {
+    animation: runFood 3s linear infinite;
+}
+
+@keyframes runChef {
+    0% { left: 0; }
+    100% { left: 80%; }
+}
+
+@keyframes runFood {
+    0% { left: 20%; }
+    100% { left: 100%; }
+}
+
+.message {
+    font-size: 18px;
+    color: #555;
+    direction: rtl;
+    text-align: center;
+}*/
