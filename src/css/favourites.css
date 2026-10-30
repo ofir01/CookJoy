@@ -74,15 +74,15 @@
 
 /*כותרת ראשית*/
 .ingredients-heading {
-    font-size: 20px;
-    font-weight: 700;
-    color: #222;
-    margin: 15px 0 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 2px solid #007bff;
-    display: inline-block;
-    padding-bottom: 4px;
+    display: block;
+    margin: 0 48px 8px 0;
+    padding: 0 0 15px;
+    border: 0;
+    border-bottom: 1px solid #e5e9e1;
+    color: #2b3b30;
+    font: 800 24px/1.2 'Heebo', sans-serif;
+    letter-spacing: 0;
+    text-transform: none;
 }
 
 
@@ -175,4 +175,104 @@
     background: linear-gradient(135deg, #fdccc6, #f38f83, #df1d07);
     transform: translateY(-1px) scale(0.96);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Refined saved recipes and shopping drawer */
+#result_cookbook {
+    top: 0;
+    right: 0;
+    width: min(420px, 92vw);
+    height: 100dvh;
+    max-height: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 26px 22px 30px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(105%);
+    border-left: 1px solid #e3e8df;
+    border-radius: 22px 0 0 22px;
+    background: #fbfaf6;
+    color: #27372c;
+    box-shadow: -24px 0 70px rgba(25, 38, 29, .18);
+    transition: transform 320ms cubic-bezier(.2,.75,.2,1);
+}
+#result_cookbook.open { transform: translateX(0); }
+#result_cookbook #close-btn {
+    position: absolute;
+    top: 20px;
+    right: 18px;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #e2e7de;
+    border-radius: 50%;
+    background: #fff;
+    color: #435347;
+    font-size: 16px;
+    transition: background 160ms ease, transform 160ms ease;
+}
+#result_cookbook #close-btn:hover { transform: rotate(90deg); background: #edf2eb; }
+#div_cookbook { display: flex; flex-direction: column; gap: 14px; margin-top: 48px; }
+
+
+.saved-recipe-card {
+    overflow: hidden;
+    border: 1px solid #e8e9e2;
+    border-radius: 17px;
+    background: #fff;
+    box-shadow: 0 5px 18px rgba(35, 47, 37, .06);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.saved-recipe-card:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(35,47,37,.1); }
+.saved-recipe-image-wrap { position: relative; overflow: hidden; height: 158px; cursor: pointer; }
+.saved-recipe-image-wrap .img_cookbook { display: block; width: 100%; height: 100%; object-fit: cover; }
+.saved-recipe-title { margin: 0; padding: 13px 15px 15px; color: #2b3b30; font: 700 15px/1.4 'Heebo', sans-serif; }
+.favorite_loadData { top: 11px; right: 11px; bottom: auto; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.94); color: #dc5d52; text-shadow: none; box-shadow: 0 3px 12px rgba(0,0,0,.14); }
+.favorite_loadData:hover { transform: scale(1.08); }
+.drawer-empty { padding: 34px 20px; border: 1px dashed #dce4da; border-radius: 18px; background: #f3f6f0; text-align: center; }
+.drawer-empty-icon { display: grid; place-items: center; width: 58px; height: 58px; margin: 0 auto 15px; border-radius: 50%; background: #e3eee1; color: #477453; font-size: 32px; }
+.drawer-empty h3 { margin: 0 0 6px; color: #2f4033; font: 700 17px 'Heebo', sans-serif; }
+.drawer-empty p { margin: 0; color: #748074; font: 400 13px/1.6 'Heebo', sans-serif; }
+.loadIngredients {
+    display: grid;
+    grid-template-columns: 36px minmax(54px, auto) 1fr;
+    min-height: 58px;
+    gap: 10px;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #e6e9e1;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(35,47,37,.04);
+    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.loadIngredients:hover { transform: translateY(-1px); border-color: #cbd9c9; background: #fff; box-shadow: 0 7px 18px rgba(35,47,37,.08); }
+.loadIngredients-title { overflow: hidden; margin: 0; color: #344438; font: 600 14px 'Heebo', sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.loadIngredients-input { width: 60px; height: 34px; box-sizing: border-box; border: 1px solid #e1e6dd; border-radius: 9px; background: #f9faf7; color: #2d3d31; font: 600 14px 'DM Sans', sans-serif; }
+.loadIngredients-input:focus { border-color: #759477; box-shadow: 0 0 0 3px rgba(83,125,88,.12); }
+.loadIngredients-remove { width: 34px; height: 34px; border-radius: 10px; background: #f7e9e5; color: #a44637; }
+.loadIngredients-remove:hover { background: #f1d4cb; }
+#div_cookbook .clear { margin-top: 2px; border-radius: 11px; background: #f5e9e4; color: #914c3f; box-shadow: none; }
+#div_cookbook .clear:hover { background: #efdbd3; transform: none; box-shadow: none; }
+
+body.dark-mode #result_cookbook { border-color: #39473c; background: #1d2821; color: #f0f3ec; box-shadow: -24px 0 70px rgba(0,0,0,.42); }
+body.dark-mode #result_cookbook #close-btn { border-color: #425045; background: #2b392f; color: #e4ece2; }
+body.dark-mode #result_cookbook #close-btn:hover { background: #37483a; }
+body.dark-mode .ingredients-heading { border-color: #3b493e; color: #f0f3ec;  }
+body.dark-mode .saved-recipe-card { border-color: #3b493e; background: #27342b; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+body.dark-mode .saved-recipe-title, body.dark-mode .loadIngredients-title { color: #edf2ea; }
+body.dark-mode .drawer-empty { border-color: #405044; background: #25332a; }
+body.dark-mode .drawer-empty-icon { background: #344a38; color: #b7d4b5; }
+body.dark-mode .drawer-empty h3 { color: #edf2ea; }
+body.dark-mode .drawer-empty p { color: #aebcaf; }
+body.dark-mode .loadIngredients { border-color: #3b493e; background: #27342b; box-shadow: 0 4px 14px rgba(0,0,0,.15); }
+body.dark-mode .loadIngredients:hover { border-color: #58705c; background: #2d3b31; }
+body.dark-mode .loadIngredients-input { border-color: #4b5b4d; background: #202b23; color: #f0f3ec; }
+body.dark-mode .loadIngredients-remove { background: #51342e; color: #ffc1ad; }
+body.dark-mode #div_cookbook .clear { background: #4b302b; color: #ffc1ad; }
+
+@media (max-width: 480px) {
+    #result_cookbook { width: 100vw; padding: 22px 18px 26px; border-radius: 0; }
 }

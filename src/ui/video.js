@@ -9,7 +9,7 @@ video.onended = function() {
     // 2. המתנה קצרה לסיום האנימציה ואז הסרה מה-DOM והצגת התוכן
     setTimeout(() => {
         introContainer.style.display = 'none'; // העלמה מוחלטת
-        mainContent.style.display = 'block';   // הצגת התוכן
+        mainContent.style.display = 'flex';   // Restore the centered hero layout after the intro.
         
         // השהייה קטנה כדי שה-opacity יעבוד
         setTimeout(() => {

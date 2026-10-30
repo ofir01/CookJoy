@@ -8,6 +8,27 @@
     font-family: Arial, sans-serif;
 }
 
+body.dark-mode .information-card {
+    border: 1px solid #3b493d;
+    background: #232f27;
+    color: #edf2e9;
+    box-shadow: 0 12px 40px rgba(0,0,0,.3);
+}
+body.dark-mode .information-title { color: #f0f3ec; }
+body.dark-mode .information-divDishTypes p { color: #d4ded2; }
+body.dark-mode .taste-bar { background: #49342e; color: #f4e8dc; }
+body.dark-mode .information-card .table th,
+body.dark-mode .information-card .table td {
+    border-color: #435346;
+    background: #29372e;
+    color: #e8eee6;
+}
+body.dark-mode .information-card .table th { background: #344437; color: #f3f5ef; }
+body.dark-mode .information-card .nameTd { border-color: #4a5b4b; background: #344437; color: #edf2e9; }
+body.dark-mode .information-card .instruction-step { border: 1px solid #405044; background: #29372e; }
+body.dark-mode .information-card .instruction-step h4,
+body.dark-mode .information-card .instruction-step p { color: #e2e9df; }
+
 .information-card {
     width: 100%;
     max-width: 1000px;
@@ -25,6 +46,15 @@
     gap: 5px;
     flex-wrap: wrap;
 }
+
+body.dark-mode .information-topInfo {
+    background: linear-gradient(125deg, #24372b, #304638);
+    border-bottom: 1px solid #405945;
+    color: #f0f4ec;
+}
+body.dark-mode .information-topInfo .information-item { color: #f0f4ec; }
+body.dark-mode .information-topInfo .information-span { color: #edf2e9; }
+body.dark-mode .information-topInfo .information-img { filter: drop-shadow(0 2px 4px rgba(0,0,0,.24)); }
 
 
 .information-item {

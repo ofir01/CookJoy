@@ -18,7 +18,7 @@ guessNutrition.addEventListener('click', () => {
 
 
 // פונקציה ליצירת overlay ולוח משחק
-function createGameOverlay() {
+function createGameOverlay(gameType) {
     // אם כבר קיים overlay – לנקות אותו
     let oldOverlay = document.querySelector(".overlay");
     let oldPanel = document.querySelector(".panel");
@@ -32,6 +32,10 @@ function createGameOverlay() {
     // יצירת חלונית המשחק
     const panel = document.createElement("section");
     panel.classList.add("panel");
+    panel.classList.add(`panel--${gameType}`);
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-labelledby', 'panel-heading-title');
 
     // תוכן פנימי
     const inner = document.createElement("div");
@@ -41,9 +45,17 @@ function createGameOverlay() {
     const closeBtn = document.createElement("button");
     closeBtn.classList.add("close-x");
     closeBtn.type = "button";
+    closeBtn.setAttribute('aria-label', 'Close game');
+
+    const heading = document.createElement('div');
+    heading.classList.add('panel-heading');
+    heading.innerHTML = gameType === 'taste'
+        ? '<span class="panel-eyebrow">TASTE DETECTIVE</span><h2 id="panel-heading-title">Guess the dominant flavor</h2><p>Study the dish, make your guess, and reveal its flavor profile.</p>'
+        : '<span class="panel-eyebrow">NUTRITION CHALLENGE</span><h2 id="panel-heading-title">How nutritious is this recipe?</h2><p>Estimate the nutrition values, then check how close you got.</p>';
 
 
     inner.appendChild(closeBtn);
+    inner.appendChild(heading);
     panel.appendChild(inner);
 
 
@@ -76,6 +88,14 @@ function createGameOverlay() {
     return { overlay, panel, inner, close };
 }
 
+function showGameError(container, error) {
+    const message = document.createElement('p');
+    message.classList.add('api-error');
+    message.setAttribute('role', 'alert');
+    message.textContent = `Game data could not be loaded: ${error.message}`;
+    container.appendChild(message);
+}
+
 
 
 
@@ -105,15 +125,31 @@ function getMaxKeyValue(obj) {
 
 // משחק הטעם השולט
 export async function game_tasteWidget() {
-    const { inner, overlay } = createGameOverlay();//יוצר את לוח המשחק
+    const { inner, overlay } = createGameOverlay('taste');
 
-    const recipe = await api_random(1);//מחזיר מתכון ראנדומלי
-    console.log(recipe);
-    const data = recipe.recipes[0];
-    const img = await api_tasteWidget_png(data);//מחזיר תמונה
-
-
-    const taste = await api_getTaste(data.id); // מחזיר את כל הטעמים במנה
+    let recipe;
+    let data;
+    let taste;
+    let img;
+    try {
+        recipe = await api_random(1);
+        data = recipe?.recipes?.[0];
+        if (!data) throw new Error('No recipe was returned.');
+        taste = await api_getTaste(data.id);
+        if (!taste || typeof taste !== 'object' || !Object.keys(taste).length) {
+            throw new Error('The flavor profile is missing from the service response.');
+        }
+        try {
+            img = await api_tasteWidget_png(data);
+        } catch (error) {
+            console.error('Taste chart image could not be loaded:', error);
+            img = data.image;
+        }
+    } catch (error) {
+        console.error('Taste game could not be loaded:', error);
+        showGameError(inner, error);
+        return;
+    }
     const maxTaste = getMaxKeyValue(taste); // מחזיר את הטעם השולט באובייקט
     //console.log(taste);
     //console.log(maxTaste);
@@ -143,7 +179,7 @@ export async function game_tasteWidget() {
 
     const subtitle = document.createElement('div');
     subtitle.classList.add('subtitle');
-    subtitle.textContent = gameData.subtitle;
+    subtitle.textContent = 'Every dish has a unique flavor profile. Which taste stands out most?';
 
     const row = document.createElement('div');
     row.classList.add('row');
@@ -177,17 +213,18 @@ export async function game_tasteWidget() {
             scoreWrap.textContent = 'score: ' + gameData.score + '/' + gameData.attempts;  // עדכון הניקוד
             actionBtn.disabled = true; // השבתת הכפתור
             extraImg.classList.add('visible');// גילוי התמונה
-            message_Text.textContent = 'true it is: ' + selectedValue;// הדפסת התוצאה
+            message_Text.textContent = 'That’s right: ' + selectedValue;
             SetScore(gameData.score); // שמירת הניקוד ב-localStorage
             SetAttempts(gameData.attempts); // שמירת הניסיונות ב-localStorage
         } else if (experience === Maximum_attempts) {
             extraImg.classList.add('visible');// גילוי התמונה
             actionBtn.disabled = true; // השבתת הכפתור
-            message_Text.textContent = 'you lost it was: ' + maxTaste.key;// הדפסת התוצאה
+            message_Text.textContent = 'Out of guesses. The answer was: ' + maxTaste.key;
             SetAttempts(gameData.attempts); // שמירת הניסיונות ב-localStorage
         }
         //console.log("נבחר:", selectedValue);
-        selectedValue_Text.textContent = `You selected: ${selectedValue}: ${taste[selectedValue]}`; // הצגת הערך הנבחר
+        const selectedTaste = Number(taste[selectedValue]);
+        selectedValue_Text.textContent = `You selected: ${selectedValue}: ${Number.isFinite(selectedTaste) ? `${Math.round(selectedTaste)}%` : 'N/A'}`;
     });
 
     // שחק שוב
@@ -274,11 +311,24 @@ export async function game_tasteWidget() {
 //================================================================================================================================================
 //ניחוש מידע תזונתי לפי כותרת
 export async function game_guessNutrition() {
-    const { inner } = createGameOverlay();
+    const { inner } = createGameOverlay('nutrition');
 
-    const recipe = await api_random(1);//מחזיר מתכון ראנדומלי
-    console.log(recipe);
-    const data = await api_guessNutrition(recipe.recipes[0].title);
+    let recipe;
+    let data;
+    try {
+        recipe = await api_random(1);
+        const recipeTitle = recipe?.recipes?.[0]?.title;
+        if (!recipeTitle) throw new Error('No recipe was returned.');
+        data = await api_guessNutrition(recipeTitle);
+    } catch (error) {
+        console.error('Nutrition game could not be loaded:', error);
+        showGameError(inner, error);
+        return;
+    }
+    const recipeTitle = document.createElement('h3');
+    recipeTitle.classList.add('title-game');
+    recipeTitle.textContent = recipe.recipes[0].title;
+    inner.appendChild(recipeTitle);
     //console.log(data);
 
 
@@ -287,8 +337,10 @@ export async function game_guessNutrition() {
 
 
         const item = data[key];
+        if (!item?.confidenceRange95Percent) return;
         const min = item.confidenceRange95Percent.min;
         const max = item.confidenceRange95Percent.max;
+        if (!Number.isFinite(min) || !Number.isFinite(max)) return;
         const mid = (min + max) / 2;
 
 

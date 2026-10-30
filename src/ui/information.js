@@ -31,7 +31,16 @@ export async function information(id) {
     console.log(ui.informations, 12312);
 
     await showLoader(ui.results, 3);
-    const recipe = await api_addInformation(id);
+    let recipe;
+    try {
+        recipe = await api_addInformation(id);
+    } catch (error) {
+        const message = document.createElement('p');
+        message.classList.add('api-error');
+        message.textContent = `Recipe details could not be loaded: ${error.message}`;
+        ui.informations.appendChild(message);
+        return;
+    }
 
     console.log(recipe);
     //עטיפת הכל
@@ -46,13 +55,12 @@ export async function information(id) {
     topInfo.classList.add('information-topInfo');
 
     const dataPoints = [
-        { icon: readyInMinutes, text: recipe.readyInMinutes + ' דקות' },
-        { icon: calories, text: (recipe.summary.match(/(\d+)\s*calories/i)?.[1] || 'לא ידוע') + ' קלוריות למנה' },
-        { icon: likes, text: recipe.aggregateLikes + ' לייקים' },
-        { icon: dollar, text: (recipe.pricePerServing / 100).toFixed(2) + ' $  למנה' },
-        { icon: score, text: (recipe.summary.match(/\d+\s*%/g)?.at(-1)?.match(/\d+/)?.input || 'לא ידוע') },
+        { icon: readyInMinutes, text: recipe.readyInMinutes + ' min' },
+        { icon: calories, text: ((recipe.summary || '').match(/(\d+)\s*calories/i)?.[1] || 'N/A') + ' calories per serving' },
+        { icon: likes, text: recipe.aggregateLikes + ' likes' },
+        { icon: dollar, text: '$' + (recipe.pricePerServing / 100).toFixed(2) + ' per serving' },
+        { icon: score, text: ((recipe.summary || '').match(/\d+\s*%/g)?.at(-1)?.match(/\d+/)?.[0] || 'N/A') },
     ];
-    console.log(recipe.summary.match(/(\d+)\s*calories/i));
 
     dataPoints.forEach(data => {
         const item = document.createElement('div');
@@ -173,7 +181,15 @@ export async function information(id) {
 
     // ==========================================================================================================================
     //המידע על בריאות וטעם
-    const taste = await api_getTaste(recipe.id);
+    let taste;
+    let tasteError = '';
+    try {
+        taste = await api_getTaste(recipe.id);
+    } catch (error) {
+        console.error('Recipe taste data could not be loaded:', error);
+        taste = {};
+        tasteError = 'Flavor percentages are currently unavailable.';
+    }
     const tasteBar = document.createElement('div');
     tasteBar.classList.add('taste-bar');
     const icons = {
@@ -187,10 +203,17 @@ export async function information(id) {
     };
 
 
-    for (const [key, value] of Object.entries(taste)) {
+    for (const [key, value] of Object.entries(taste || {})) {
         const item = document.createElement('span');
         item.classList.add('taste-item');
-        item.textContent = `${icons[key] || ''} ${Math.round(value)}`;
+        const percentage = Number(value);
+        item.textContent = `${icons[key] || ''} ${Number.isFinite(percentage) ? `${Math.round(percentage)}%` : 'N/A'}`;
+        tasteBar.appendChild(item);
+    }
+    if (!Object.keys(taste || {}).length) {
+        const item = document.createElement('span');
+        item.classList.add('taste-item');
+        item.textContent = tasteError || 'Flavor percentages are currently unavailable.';
         tasteBar.appendChild(item);
     }
 
@@ -241,10 +264,10 @@ export async function information(id) {
     const headerRow = document.createElement('tr');
     //כותרת הטבלה
     const nameHeader = document.createElement('th');
-    nameHeader.innerText = 'רכיב';
+    nameHeader.innerText = 'Ingredient';
 
     const descHeader = document.createElement('th');
-    descHeader.innerText = 'כמות / תיאור';
+    descHeader.innerText = 'Amount / description';
 
 
     headerRow.appendChild(nameHeader);
@@ -263,7 +286,7 @@ export async function information(id) {
     const but_servings = document.createElement('button');
     const img_servings = document.createElement('img');
     img_servings.src = reset;
-    img_servings.alt = ' מנות';
+    img_servings.alt = 'Reset servings';
     img_servings.classList.add('servings-icon');
     but_servings.appendChild(img_servings);
 
@@ -288,7 +311,7 @@ export async function information(id) {
     const but_Ingredients = document.createElement('button');
     const img_Ingredients = document.createElement('img');
     img_Ingredients.src = Ingredients;
-    img_Ingredients.alt = 'מצרכים';
+    img_Ingredients.alt = 'Save ingredients to shopping list';
     img_Ingredients.classList.add('servings-icon');
     but_Ingredients.appendChild(img_Ingredients);
     but_Ingredients.addEventListener('click', () => {
@@ -330,7 +353,7 @@ export async function information(id) {
     link.id = 'recipe-link';
     link.href = recipe.sourceUrl;
     link.target = '_blank';
-    link.textContent = 'לצפייה במתכון באתר המקורי';
+    link.textContent = 'View the original recipe';
 
     // הרכבת הכרטיס
     card.appendChild(topInfo);
@@ -416,8 +439,9 @@ function Substitutes(data, result_substitutes) {
         } else {
             // אם אין מחליפים
             const tr = document.createElement('tr');
+            const td = createTd('No substitutes available');
             td.colSpan = 2;
-            tr.appendChild(createTd("אין מחליפים זמינים"));
+            tr.appendChild(td);
             tbody.appendChild(tr);
         }
 
@@ -434,7 +458,27 @@ function Substitutes(data, result_substitutes) {
 //==================================================================================================================================
 /*יצירת הטבלה עם הכמות*/
 async function extended_Ingredients(tbody, recipe, input_servings, result_substitutes) {
-    const extendedIngredients = await api_getIngredients(recipe.id);
+    let extendedIngredients;
+    try {
+        extendedIngredients = await api_getIngredients(recipe.id);
+    } catch (error) {
+        tbody.innerHTML = '';
+        const row = document.createElement('tr');
+        const cell = createTd(`Ingredients could not be loaded: ${error.message}`);
+        cell.colSpan = 3;
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        return;
+    }
+    if (!Array.isArray(extendedIngredients)) {
+        tbody.innerHTML = '';
+        const row = document.createElement('tr');
+        const cell = createTd('Ingredients are unavailable for this recipe.');
+        cell.colSpan = 3;
+        row.appendChild(cell);
+        tbody.appendChild(row);
+        return;
+    }
     //console.log(extendedIngredients);   
     const extendedIngredientsID = recipe.extendedIngredients;
     tbody.innerHTML = '';
@@ -447,8 +491,12 @@ async function extended_Ingredients(tbody, recipe, input_servings, result_substi
         nameTd.classList.add('nameTd');
         //אופציות אחרות למצרכים
         nameTd.addEventListener('click', async () => {
-            const data = await apiSubstitutes(extendedIngredientsID[index].id);
-            Substitutes(data, result_substitutes);
+            try {
+                const data = await apiSubstitutes(extendedIngredientsID[index].id);
+                Substitutes(data, result_substitutes);
+            } catch (error) {
+                Substitutes({ status: 'failure', message: error.message }, result_substitutes);
+            }
         })
         tr.appendChild(nameTd);
 
@@ -539,7 +587,7 @@ function step(recipe) {
         stepContainer.classList.add('instruction-step');
 
         const stepNumber = document.createElement('h4');
-        stepNumber.innerText = `שלב ${instruction.number}:`;
+        stepNumber.innerText = `Step ${instruction.number}:`;
 
         const stepDescription = document.createElement('p');
         stepDescription.innerText = instruction.step;
@@ -566,12 +614,16 @@ function createInstructionsSlider(recipe) {
 
     // כפתורי חצים
     const leftBtn = document.createElement('button');
+    leftBtn.type = 'button';
     leftBtn.classList.add('slider-btn', 'left-btn');
     leftBtn.innerHTML = '&#10094;';
+    leftBtn.setAttribute('aria-label', 'Previous preparation step');
 
     const rightBtn = document.createElement('button');
+    rightBtn.type = 'button';
     rightBtn.classList.add('slider-btn', 'right-btn');
     rightBtn.innerHTML = '&#10095;';
+    rightBtn.setAttribute('aria-label', 'Next preparation step');
 
 
     // בניית הסליידר
@@ -583,30 +635,35 @@ function createInstructionsSlider(recipe) {
     // סקריפט לחצים
     let sliderIndex = 0;
     const sliders = instructionsContainer.querySelectorAll('.instruction-step');
-    //console.log(sliders);
-    showSlide(sliderIndex);
-
-    function showSlide(index) {
-        if (index == 0) leftBtn.style.visibility = 'hidden';
-        else if (index == sliders.length - 1) rightBtn.style.visibility = 'hidden';
-        else { leftBtn.style.visibility = 'visible'; rightBtn.style.visibility = 'visible'; }
-
-        /*
-        if (index < 0) sliderIndex = sliders.length - 1;
-        else if(index >= sliders.length) sliderIndex = 0;
-        */
-        sliders.forEach(slide => slide.classList.remove('displaySlide'));
-        sliders[sliderIndex].classList.add('displaySlide');
+    if (sliders.length === 0) {
+        const emptyState = document.createElement('p');
+        emptyState.className = 'instruction-empty';
+        emptyState.textContent = 'Preparation steps are not available for this recipe.';
+        instructionsContainer.appendChild(emptyState);
+        leftBtn.hidden = true;
+        rightBtn.hidden = true;
+        return sliderContainer;
     }
 
+    function showSlide(index) {
+        sliderIndex = Math.max(0, Math.min(index, sliders.length - 1));
+        sliders.forEach(slide => slide.classList.remove('displaySlide'));
+        sliders[sliderIndex]?.classList.add('displaySlide');
+
+        leftBtn.disabled = sliderIndex === 0;
+        rightBtn.disabled = sliderIndex === sliders.length - 1;
+        leftBtn.style.visibility = leftBtn.disabled ? 'hidden' : 'visible';
+        rightBtn.style.visibility = rightBtn.disabled ? 'hidden' : 'visible';
+    }
+
+    showSlide(sliderIndex);
+
     leftBtn.addEventListener('click', () => {
-        sliderIndex--;
-        showSlide(sliderIndex);
+        showSlide(sliderIndex - 1);
     });
 
     rightBtn.addEventListener('click', () => {
-        sliderIndex++;
-        showSlide(sliderIndex);
+        showSlide(sliderIndex + 1);
     });
 
 

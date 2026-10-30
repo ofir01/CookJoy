@@ -1,177 +1,263 @@
-/*שורת החיפוש והתמונה*/
+/* ==========================================
+   Hero / Background Section (אזור הרקע והחיפוש)
+   ========================================== */
+
 #background-container {
     position: relative;
     width: 100%;
-    height: 60vh;
-    overflow: hidden;
-
+    min-height: 75vh; /* גובה מותאם ומרשים יותר */
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    /* ממרכז אנכית */
     align-items: center;
-    /* ממרכז אופקית */
-    gap: 2rem;
-    /* רווח בין האלמנטים */
-    text-align: center;
-    padding: 1rem;
+    overflow: hidden;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
 }
 
+/* תמונת הרקע */
 #img_background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    object-fit: cover;
     object-position: center;
-    
-
-    z-index: -1;
-}
-
-/*הכיתוב על התמונה*/
-#welcome-text {
-    position: absolute;
-    top: 11%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2rem;
-    font-weight: bold;
-    color: #30aabc;
-    text-align: center;
     z-index: 1;
+    transition: transform 10s ease; /* אפקט תנועה איטי ויוקרתי לרקע */
+}
+
+#background-container:hover #img_background {
+    transform: scale(1.03);
+}
+
+/* שכבת הכהיה (Overlay) מעל התמונה להבלטת המלל */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 600px;
+    height: 100%;
+    background: linear-gradient(
+        180deg, 
+        rgba(0, 0, 0, 0.45) 0%, 
+        rgba(0, 0, 0, 0.65) 100%
+    );
+    z-index: 2;
 }
 
+/* מעטפת התוכן המרכזית */
+.hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 850px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+    text-align: center;
+}
+
+/* ==========================================
+   Welcome Text (כותרות)
+   ========================================== */
+
+#welcome-text {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.2;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* המילה CookJoy תופסת תשומת לב */
 #welcome-text .highlight {
-    font-size: 3.5rem;
-    animation: colorChange 8s infinite;
+    font-family: 'Pacifico', cursive; /* שימוש בפונט המעוצב של הלוגו */
+    font-size: clamp(3rem, 6vw, 4.8rem);
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    padding: 0 10px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
 }
 
-@keyframes colorChange {
-    0% {
-        color: #1d7a8c;
-    }
-
-    /* תכלת כהה */
-    20% {
-        color: #3498db;
-    }
-
-    /* כחול בינוני */
-    40% {
-        color: #2ecc71;
-    }
-
-    /* ירוק עדין */
-    60% {
-        color: #9b59b6;
-    }
-
-    /* סגול פסטלי */
-    80% {
-        color: #16a085;
-    }
-
-    /* טורקיז עדין */
-    100% {
-        color: #1d7a8c;
-    }
-
-    /* חוזר לתכלת כהה */
+/* תת כותרת */
+.sub-text {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-weight: 400;
+    color: #e0e0e0;
+    letter-spacing: 0.5px;
 }
 
+/* ==========================================
+   Search Container (סרגל חיפוש)
+   ========================================== */
 
 .search-container {
     display: flex;
-    gap: 1rem;
+    align-items: center;
     width: 100%;
-    max-width: 600px;
-    margin: auto;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translateX(-50%);
-    flex-wrap: wrap;
-    z-index: 3;
-    /* חשוב לריספונסיביות */
+    max-width: 650px;
+    background: #ffffff;
+    padding: 6px 8px 6px 20px;
+    border-radius: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.search-container:focus-within {
+    box-shadow: 0 12px 35px rgba(255, 126, 95, 0.4);
+    transform: translateY(-2px);
 }
 
 .search-box {
     position: relative;
     flex: 1;
-    /* שיתפוס את כל הרוחב */
+    display: flex;
+    align-items: center;
 }
 
-
-
-#searchButton {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    background: linear-gradient(135deg, #8B4513, #D2691E, #FFA500, #FFD580);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 127, 80, 0.4);
+/* אייקון סרק בתוך השורה */
+.search-icon {
+    color: #888;
+    font-size: 1.2rem;
+    margin-right: 12px;
 }
 
 #searchInput {
     width: 100%;
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
-    border: 2px solid #e1e8ed;
-    border-radius: 50px;
+    border: none;
     outline: none;
-    transition: all 0.3s ease;
-    background: white;
+    font-size: 1.1rem;
+    color: #333;
+    background: transparent;
+    padding: 10px 0;
     box-sizing: border-box;
 }
 
-#searchInput:focus {
-    border-color: coral;
-    box-shadow: 0 0 0 3px rgba(255, 127, 80, 0.3);
-    transform: translateY(-2px);
+#searchInput::placeholder {
+    color: #aaa;
 }
 
+/* כפתור חיפוש */
+#searchButton {
+    padding: 14px 32px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff7e5f, #ff6b6b);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    white-space: nowrap;
+}
 
 #searchButton:hover {
-    background: linear-gradient(135deg, #A0522D, #E67300, #FFB347, #FFF0C1);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(160, 82, 45, 0.6);
+    background: linear-gradient(135deg, #ff6b6b, #e05656);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
 }
 
+#searchButton:active {
+    transform: translateY(1px);
+}
 
-@media (max-width: 800px) {
-    #welcome-text {
-        top: 0%;
-        font-size: 1.5rem;
+/* ==========================================
+   Jokes / Tip Section (בדיחה / טיפ יומי)
+   ========================================== */
+
+#jokes-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px); /* אפקט זכוכית מודרני */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 12px 24px;
+    border-radius: 30px;
+    max-width: 90%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.joke-icon {
+    color: #ffd700;
+    font-size: 1.3rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+#jokes {
+    color: #ffffff;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    font-weight: 500;
+    font-style: italic;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    max-height: 100px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+/* עיצוב גלילה לבדיחות */
+#jokes::-webkit-scrollbar {
+    width: 4px;
+}
+
+#jokes::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+}
+
+/* ==========================================
+   Responsive Design (התאמה לניידים)
+   ========================================== */
+
+@media (max-width: 600px) {
+    #background-container {
+        min-height: 65vh;
+        padding: 1.5rem 1rem;
     }
 
-    .search-container {
-        max-width: 480px;
+    .hero-content {
+        gap: 1.8rem;
     }
 
     .search-container {
         flex-direction: column;
-        align-items: stretch;
-        top: 35%;
-        /* קצת למעלה כי זה נהיה גבוה יותר */
-        transform: translate(-50%, -50%);
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        gap: 10px;
+    }
+
+    .search-box {
+        width: 100%;
+        background: #ffffff;
+        padding: 6px 16px;
+        border-radius: 30px;
+        box-sizing: border-box;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
     }
 
     #searchButton {
         width: 100%;
-        border-radius: 20px;
-        padding: 1rem;
-        font-size: 1rem;
+        border-radius: 30px;
+        padding: 12px;
     }
 
-    #searchInput {
-        font-size: 1rem;
+    #jokes-wrapper {
+        padding: 10px 16px;
     }
 }
 
@@ -402,6 +488,110 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* Hero, discovery and recipe card refresh */
+#background-container {
+    min-height: min(650px, 72vh);
+    padding: 72px 24px;
+    background: #28342b;
+}
+#img_background { object-position: center 54%; }
+.hero-overlay { background: linear-gradient(90deg, rgba(21,32,25,.73), rgba(21,32,25,.32) 65%, rgba(21,32,25,.2)); }
+.hero-content { max-width: 760px; align-items: flex-start; text-align: right; gap: 28px; }
+#welcome-text { align-items: flex-start; gap: 2px; font-family: 'Heebo', sans-serif; font-size: clamp(2.8rem, 6.2vw, 5.5rem); line-height: 1.08; text-shadow: 0 3px 22px rgba(0,0,0,.18); }
+#welcome-text .eyebrow { margin-bottom: 16px; color: #eeb98d; font: 700 12px 'DM Sans', sans-serif; letter-spacing: 3px; }
+#welcome-text .highlight { padding: 0; font: 800 clamp(2.8rem, 6.2vw, 5.5rem)/1.08 'Heebo', sans-serif; background: none; color: #f2aa78; -webkit-text-fill-color: #f2aa78; filter: none; }
+.sub-text { margin-top: 12px; color: rgba(255,255,255,.85); font-size: clamp(1rem, 2vw, 1.2rem); letter-spacing: 0; }
+.search-container { max-width: 670px; min-height: 68px; padding: 7px 8px 7px 20px; border: 1px solid rgba(255,255,255,.72); border-radius: 18px; box-shadow: 0 16px 40px rgba(0,0,0,.2); }
+.search-icon { margin: 0 12px; color: #718071; }
+#searchInput { min-height: 46px; padding: 10px 6px; font: 500 16px 'Heebo', sans-serif; }
+#searchInput::placeholder { color: #8a9188; }
+#searchButton { min-height: 52px; padding: 12px 23px; border-radius: 13px; background: #315b45; box-shadow: none; font: 700 14px 'Heebo', sans-serif; }
+#searchButton:hover { background: #244533; box-shadow: 0 6px 16px rgba(36,69,51,.22); }
+#searchButton span { margin-inline-start: 8px; }
+#jokes-wrapper { max-width: 580px; justify-content: flex-start; border: 0; border-radius: 0; border-right: 2px solid #e8ad7c; padding: 2px 14px 2px 0; background: transparent; box-shadow: none; backdrop-filter: none; }
+#jokes-wrapper .joke-icon { color: #f0b278; }
+#jokes { position: static; width: auto; max-width: 100%; max-height: 72px; padding: 0; transform: none; color: rgba(255,255,255,.9); font-size: 14px; font-style: normal; font-weight: 500; text-align: right; text-shadow: none; }
+#brand-slider { max-width: 1240px; margin: 52px auto 28px; padding: 0 28px; overflow: hidden; -webkit-mask-image: none; mask-image: none; }
+#brand-title { padding: 0 0 18px; background: transparent; color: #29372e; text-align: right; font: 700 clamp(22px, 3vw, 30px) 'Heebo', sans-serif; }
+#brand-track { width: 100%; overflow-x: auto; scrollbar-width: thin; }
+.brand-group { margin: 0 0 14px; gap: 16px; animation-duration: 12s; }
+.buttonSliderRecipes { width: 224px; overflow: hidden; border: 1px solid #eee9e1; border-radius: 16px; background: #fffefa; box-shadow: 0 5px 20px rgba(38,47,38,.06); }
+.buttonSliderRecipes:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(38,47,38,.12); }
+.brand-group img { filter: none; }
+.slider-recipe-img { display: block; width: 100%; height: 145px; object-fit: cover; border-radius: 0; }
+.slider-recipe-title { min-height: 48px; margin: 0; padding: 12px 14px; color: #303a32; font: 600 14px/1.45 'Heebo', sans-serif; text-align: right; }
+#results { max-width: 1240px; margin: 24px auto 48px; padding: 0 28px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; }
+.recipe { position: relative; padding: 0 0 14px; border: 1px solid #eee9e1; border-radius: 18px; background: #fffefa; box-shadow: 0 8px 28px rgba(38,47,38,.06); }
+.recipe h3 { min-height: 48px; margin: 0; padding: 17px 18px 12px; color: #2c382f; font: 700 17px/1.4 'Heebo', sans-serif; }
+.recipe img { display: block; width: 100%; height: 190px; margin: 0; border-radius: 0; object-fit: cover; }
+.recipe:hover img { transform: none; }
+.recipe p { margin: 4px 14px; padding: 7px 10px; background: #f4f4ee; color: #555f56; font-size: 13px; }
+.recipe p strong { color: #344d3c; }
+.no-results { margin: 20px auto; padding: 24px; }
+:focus-visible { outline: 3px solid #df9b68; outline-offset: 3px; }
+@media (max-width: 600px) {
+    #background-container { min-height: 600px; padding: 60px 20px; }
+    .hero-content { align-items: stretch; gap: 24px; }
+    #welcome-text { align-items: flex-start; font-size: clamp(2.6rem, 12vw, 4rem); }
+    #welcome-text .highlight { font-size: clamp(2.6rem, 12vw, 4rem); }
+    .search-container { flex-direction: column; align-items: stretch; gap: 10px; padding: 0; background: transparent; border: 0; box-shadow: none; }
+    .search-box { min-height: 58px; padding: 5px 14px; border: 1px solid rgba(255,255,255,.8); border-radius: 14px; }
+    #searchButton { width: 100%; }
+    #jokes-wrapper { max-width: 100%; }
+    #brand-slider { margin-top: 34px; padding: 0 18px; }
+    #results { grid-template-columns: 1fr; padding: 0 18px; }
+    .recipe img { height: 220px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Centered recipe discovery and clean horizontal carousel */
+#background-container { min-height: min(680px, 76vh); }
+.hero-overlay { background: linear-gradient(180deg, rgba(20,28,22,.34), rgba(20,28,22,.58)); }
+.hero-content { width: min(760px, 100%); max-width: 760px; align-items: center; text-align: center; gap: 26px; }
+#welcome-text { width: 100%; align-items: center; text-align: center; font-size: clamp(2.5rem, 5.8vw, 5rem); }
+#welcome-text .highlight { font-size: clamp(2.5rem, 5.8vw, 5rem); }
+.sub-text { max-width: 620px; }
+.search-container { width: min(680px, 100%); }
+#jokes-wrapper { justify-content: center; border-right: 0; border-left: 2px solid #e8ad7c; padding: 4px 0 4px 14px; }
+#jokes { text-align: left; }
+#brand-track { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; }
+#brand-track::-webkit-scrollbar { display: none; width: 0; height: 0; }
+#brand-track { cursor: grab; }
+#brand-track:active { cursor: grabbing; }
+mark.search-match { padding: 0 .08em; border-radius: .18em; background: #f5c78c; color: #26392d; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+body.dark-mode mark.search-match { background: #785c3e; color: #fff6e8; }
+mark.search-match { padding: 0 .12em; background: #f2bf77; color: #243328; font-weight: 800; box-shadow: 0 0 0 1px rgba(191,119,53,.18); }
+body.dark-mode mark.search-match { background: #c79555; color: #1e251f; box-shadow: 0 0 0 1px rgba(231,190,127,.2); }
+@media (max-width: 600px) {
+    #background-container { min-height: 600px; }
+    .hero-content { align-items: center; }
+    #welcome-text { align-items: center; text-align: center; }
+    #jokes-wrapper { justify-content: center; border-left: 0; padding: 0; }
+    #jokes { text-align: center; }
+}
+
+body.dark-mode #brand-slider {
+    box-sizing: border-box;
+    width: min(1240px, calc(100% - 36px));
+    max-width: none;
+    margin: 44px auto 30px;
+    padding: 24px 24px 12px;
+    overflow: hidden;
+    border: 1px solid #3b4a3e;
+    border-radius: 24px;
+    background: linear-gradient(145deg, #222f26, #29372d);
+    box-shadow: 0 16px 42px rgba(0,0,0,.2), inset 0 1px rgba(255,255,255,.025);
+}
+body.dark-mode #brand-title { padding: 0 0 17px; background: transparent; color: #f0f3ec; }
+body.dark-mode #brand-track { background: transparent; }
+body.dark-mode .buttonSliderRecipes { border-color: #435346; background: #303d33; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+body.dark-mode .buttonSliderRecipes:hover { border-color: #607660; background: #354538; box-shadow: 0 10px 24px rgba(0,0,0,.3); }
+body.dark-mode .slider-recipe-title { color: #edf2e9; }
+body.dark-mode .message { color: #d4ded2; }
+
 .No-results {
     color: gray;
     text-align: center;
@@ -409,12 +599,32 @@
     padding: 5px;
 }
 
+/* Image-free, centered hero */
+#background-container {
+    box-sizing: border-box;
+    min-height: min(680px, calc(100vh - 82px));
+    background: radial-gradient(ellipse at 18% 18%, #f1e5d6 0, transparent 34%),
+                radial-gradient(ellipse at 86% 78%, #e7eee4 0, transparent 38%),
+                #fbf8f3;
+}
+.hero-overlay { display: none; }
+.hero-content { width: min(760px, 100%); align-items: center; text-align: center; gap: 25px; }
+#welcome-text { align-items: center; text-align: center; color: #26392d; text-shadow: none; }
+#welcome-text .eyebrow { margin-bottom: 12px; color: #687d6b; }
+#welcome-text .highlight { color: #cb7041; -webkit-text-fill-color: #cb7041; }
+.sub-text { color: #70796f; }
+.search-container { border-color: #fff; box-shadow: 0 18px 45px rgba(39, 58, 43, .13); }
+.search-icon { color: #718071; }
+@media (max-width: 600px) {
+    #background-container { min-height: 600px; padding: 48px 20px; }
+    .hero-content { align-items: center; }
+    #welcome-text { align-items: center; text-align: center; }
+    .search-container { padding: 0; background: transparent; border: 0; box-shadow: none; }
+    .search-box { border-color: #e4e8df; }
+}
+
 .highlight {
-    font-weight: bold;
-    color: coral;
-    /* צבע בולט */
-    background: rgba(255, 127, 80, 0.15);
-    /* אופציונלי - רקע עדין */
-    border-radius: 3px;
-    padding: 0 2px;
+    color: #d35400;         /* כתום כהה */
+    font-weight: 800;     
+    background-color: transparent; /* ללא רקע */
 }

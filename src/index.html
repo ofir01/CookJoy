@@ -1,85 +1,112 @@
 <!DOCTYPE html>
 <!-- <html lang="en"> -->
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CookJoy</title>
+    <meta name="theme-color" content="#fbf8f3">
+    <meta name="description" content="Discover inspiring recipes, save your favorites, and plan your next meal with CookJoy.">
+    <title>CookJoy | Discover something delicious</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/favourites.css">
-    <link rel="stylesheet" href="./css/game.css">
-    <link rel="stylesheet" href="./css/header.css">
-    <link rel="stylesheet" href="./css/information.css">
-    <link rel="stylesheet" href="./css/Loader.css">
-    <link rel="stylesheet" href="./css/searchInput.css">
-    <link rel="stylesheet" href="./css/slider.css">
-    <link rel="stylesheet" href="./css/video.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
+
+    <!-- הסרגל העליוון-->
     <header>
-        <img id="imgLogo" src="image/CookJoy.png" alt="">
-        <button id="darkModeIcon"></button>
-        <button id="but_cookbook"><img src="image/cookbook.png" alt=""></button>
-        <button id="but_Ingredients"><img src="image/Ingredients.png" alt=""></button>
-        <button class="game-button" id="tasteWidget">game-tasteWidget</button>
-        <button class="game-button" id="guessNutrition">guess-Nutrition</button>
+        <a class="brand" href="#top" aria-label="CookJoy home">
+            <img id="imgLogo" src="image/CookJoy.png" alt="">
+            <span>Cook<span>Joy</span><small>COOK SOMETHING GOOD</small></span>
+        </a>
+        <nav class="header-actions" aria-label="Site tools">
+            <button id="but_cookbook" aria-label="Saved recipes"><img src="image/cookbook.png" alt=""><span>Saved recipes</span></button>
+            <button id="but_Ingredients" aria-label="Shopping list"><img src="image/Ingredients.png" alt=""><span>Shopping list</span></button>
+            <button class="game-button" id="tasteWidget">Taste quiz</button>
+            <button class="game-button" id="guessNutrition">Nutrition quiz</button>
+            <button class="game-button joke-button" id="dailyJokeButton" aria-controls="dailyJokeOverlay" aria-expanded="false"><i class="fa-regular fa-lightbulb" aria-hidden="true"></i> Daily joke</button>
+            <button id="darkModeIcon" aria-label="Toggle display mode"></button>
+        </nav>
     </header>
 
+    <!-- הוידאו שיוצג בכניסה לאתר-->
     <div id="intro-container">
         <video id="intro-video" autoplay muted playsinline>
-            <source src="./Cookbook Design - Dream.mp4" type="video/mp4">
-            הדפדפן לא תומך בוידאו.
+            <source src="Cookbook Design - Dream.mp4" type="video/mp4">
+            Your browser does not support video.
         </video>
     </div>
 
-    <div id="background-container">
-        <p id="welcome-text">ברוכים הבאים ל-<span class="highlight">CookJoy</span><br>מתכונים טעימים לכל אירוע!</p>
-        <img id="img_background" src="image/background.png" alt="">
-        <div class="search-container">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search for delicious recipes...">
-                <ul id="autocomplete-list"></ul>
+    <!-- Recipe discovery -->
+    <main id="top">
+    <section id="background-container" aria-labelledby="welcome-text">
+        <div class="hero-content">
+            <h1 id="welcome-text">
+                <span class="eyebrow">GOOD FOOD, GOOD MOOD</span>
+                Discover your next
+                <span class="highlight">favorite meal.</span>
+                <span class="sub-text">Fresh inspiration for every craving and every occasion.</span>
+            </h1>
+
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="What would you like to cook today?" aria-label="Search recipes" autocomplete="off">
+                    <ul id="autocomplete-list"></ul>
+                </div>
+                <button id="searchButton">Explore recipes <span aria-hidden="true">→</span></button>
             </div>
-            <button id="searchButton">Search</button>
+
         </div>
-        <div id="jokes"></div>
-    </div>
+    </section>
 
 
     <!-- סרגל החלקה של קטגוריות -->
-    <div id="brand-slider">
+    <section id="brand-slider" aria-labelledby="brand-title">
         <h1 id="brand-title"></h1>
         <div id="brand-track">
         </div>
-    </div>
+    </section>
+
+    <section id="random-recipes" aria-labelledby="random-recipes-title">
+        <div class="recipe-section-heading">
+            <span class="section-eyebrow">FRESH FROM THE KITCHEN</span>
+            <h2 id="random-recipes-title">A little inspiration</h2>
+        </div>
+        <div id="random-recipe-grid" aria-live="polite"></div>
+    </section>
 
 
     <!-- הצגת תוצאות של החיפוש -->
-    <div id="results"></div>
-    <div id="information"></div><!-- מידע על המתכון -->
+    <section id="results" aria-live="polite" aria-label="Search results"></section>
+    <section id="information" aria-live="polite" aria-label="Recipe details"></section>
 
 
 
     <!-- מועדפים -->
     <div id="result_cookbook">
-        <button id="close-btn">✖</button>
         <div id="div_cookbook"></div>
+    </div>
+
+    <div id="dailyJokeOverlay" class="joke-overlay" hidden>
+        <section class="joke-panel" role="dialog" aria-modal="true" aria-labelledby="dailyJokeTitle">
+            <div class="panel__inner">
+                <button id="closeJokeButton" class="close-x" type="button" aria-label="Close daily joke"></button>
+                <div class="panel-heading">
+                    <span class="panel-eyebrow">A LITTLE FOOD FOR THOUGHT</span>
+                    <h2 id="dailyJokeTitle">Today's food joke</h2>
+                    <p id="dailyJokeText" aria-live="polite">Click above to load a fresh joke.</p>
+                </div>
+            </div>
+        </section>
     </div>
 
 
 
 
+</main>
 </body>
-<script src="./ui/video.js"></script>
-<script src="./ui/darkMode.js"></script>
-<script src="../api/api.js"></script>
-<script src="./ui/favourites.js"></script>
-<script src="./ui/slider.js"></script>
-<script src="./ui/game.js"></script>
-<script src="./ui/searchInput.js"></script>
-<script src="./ui/main.js"></script>
 
 </html>

@@ -7,6 +7,70 @@ body {
   background: #FAF9F6;
 }
 
+/* CookJoy visual refresh */
+:root {
+  --ink: #222b25;
+  --muted: #727a70;
+  --paper: #fbf8f3;
+  --surface: #fffefa;
+  --green: #315b45;
+  --green-dark: #244533;
+  --orange: #e78b55;
+  --line: #e9e4dc;
+  --shadow: 0 18px 50px rgba(38, 47, 38, .09);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Heebo', 'DM Sans', sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.6;
+}
+header {
+  position: relative;
+  z-index: 20;
+  min-height: 82px;
+  padding: 0 clamp(20px, 6vw, 92px);
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba(255, 254, 250, .96);
+  border-bottom: 1px solid rgba(49, 91, 69, .08);
+}
+.brand { display: inline-flex; align-items: center; gap: 9px; color: var(--green); text-decoration: none; font-size: 23px; font-weight: 800; line-height: 1.1; }
+.brand > span > span { color: var(--orange); }
+.brand small { display: block; margin-top: 5px; color: #858b80; font: 700 8px/1 'DM Sans', sans-serif; letter-spacing: 1.6px; }
+#imgLogo { width: 46px; height: 46px; object-fit: contain; }
+.header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+#but_cookbook, #but_Ingredients { width: auto; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 12px; color: #424b43; border: 1px solid transparent; border-radius: 999px; background: transparent; font: 600 13px 'Heebo', sans-serif; }
+#but_cookbook img, #but_Ingredients img { width: 21px; height: 21px; object-fit: contain; }
+#but_cookbook:hover, #but_Ingredients:hover { background: #f1f2eb; border-color: #e3e8dc; }
+#darkModeIcon { width: 42px; height: 42px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--green); font-size: 17px; cursor: pointer; }
+.game-button { margin: 0; padding: 10px 15px; border: 1px solid #e4e8df; border-radius: 999px; background: transparent; box-shadow: none; color: var(--green); font: 600 13px 'Heebo', sans-serif; text-transform: none; }
+.game-button:hover { color: white; background: var(--green); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(49,91,69,.16); }
+body.dark-mode { --ink:#f3efe7; --muted:#c3c9bf; --paper:#191f1b; --surface:#232b25; --line:#39443b; --green:#9ac4a2; --green-dark:#315b45; background:var(--paper); color:var(--ink); }
+body.dark-mode header { background:#202822; border-color:#354039; }
+body.dark-mode .brand, body.dark-mode #but_cookbook, body.dark-mode #but_Ingredients { color:var(--ink); }
+body.dark-mode #darkModeIcon, body.dark-mode .game-button { background:var(--surface); color:var(--ink); border-color:var(--line); }
+body.dark-mode .recipe { background:var(--surface); border-color:var(--line); }
+body.dark-mode .recipe h3, body.dark-mode .recipe p, body.dark-mode .recipe p strong { color:var(--ink); }
+body.dark-mode .recipe p { background:#2d372f; }
+
+@media (max-width: 760px) {
+  header { min-height: 70px; padding: 8px 16px; flex-wrap: wrap; }
+  .brand { font-size: 20px; }
+  .header-actions { flex-wrap: wrap; gap: 4px; }
+  #but_cookbook, #but_Ingredients { padding: 6px; }
+  #but_cookbook span, #but_Ingredients span { display: none; }
+  .game-button { padding: 8px 11px; font-size: 12px; }
+}
+
+@media (max-width: 420px) {
+  header { gap: 4px; }
+  .header-actions { gap: 2px; }
+  .game-button { font-size: 11px; padding: 7px 9px; }
+}
+
 header {
   margin: 0;
   background: bisque;
@@ -167,3 +231,32 @@ body.dark-mode #searchButton {
     gap: 10px;
   }
 }
+
+/* Keep the refreshed header rules after the legacy component defaults. */
+header { min-height: 82px; padding: 0 clamp(20px, 6vw, 92px); justify-content: space-between; gap: 24px; background: rgba(255,254,250,.96); border-bottom: 1px solid rgba(49,91,69,.08); }
+#imgLogo { width: 46px; height: 46px; }
+#but_cookbook, #but_Ingredients { width: auto; min-height: 44px; padding: 8px 12px; }
+#but_cookbook img, #but_Ingredients img { width: 21px; }
+#darkModeIcon { width: 42px; height: 42px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--green); }
+.game-button { margin: 0; padding: 10px 15px; border: 1px solid #e4e8df; border-radius: 999px; background: transparent; box-shadow: none; color: var(--green); font: 600 13px 'Heebo', sans-serif; text-transform: none; }
+@media (max-width: 760px) { header { min-height: 70px; padding: 8px 16px; flex-wrap: wrap; } #but_cookbook, #but_Ingredients { padding: 6px; } }
+@media (max-width: 480px) { header { gap: 4px; } }
+
+body.dark-mode #but_cookbook,
+body.dark-mode #but_Ingredients {
+  color: #e8eee6;
+  border-color: transparent;
+  transition: background-color 170ms ease, border-color 170ms ease, color 170ms ease, transform 170ms ease, box-shadow 170ms ease;
+}
+body.dark-mode #but_cookbook:hover,
+body.dark-mode #but_Ingredients:hover,
+body.dark-mode #but_cookbook:focus-visible,
+body.dark-mode #but_Ingredients:focus-visible {
+  transform: translateY(-1px);
+  border-color: #536b57;
+  background: linear-gradient(135deg, #34483a, #2b3d31);
+  color: #fff7ec;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25), inset 0 1px rgba(255,255,255,.08);
+}
+body.dark-mode #but_cookbook:hover img,
+body.dark-mode #but_Ingredients:hover img { filter: brightness(1.12) saturate(1.08); }

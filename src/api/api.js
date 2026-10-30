@@ -1,56 +1,51 @@
 const API_KEY = '0d612687ebda4be093cec43997fdc264';
 
+async function requestJson(url) {
+    let response;
+    try {
+        response = await fetch(url);
+    } catch (error) {
+        throw new Error(`Unable to reach the recipe service: ${error.message}`);
+    }
+
+    let data;
+    try {
+        data = await response.json();
+    } catch {
+        throw new Error(`The recipe service returned an invalid response (HTTP ${response.status}).`);
+    }
+
+    if (!response.ok || data?.status === 'failure' || data?.code) {
+        throw new Error(data?.message || `The recipe service request failed (HTTP ${response.status}).`);
+    }
+    return data;
+}
+
 
 //מידע על המתכון==============================================================================================================================
 //מידע על ההכנה למתכון 
 export async function api_addInformation(id) {
-    try {
-        console.log(id);
-        const res = await fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=true&apiKey=${API_KEY}`);
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
+    return requestJson(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=true&apiKey=${API_KEY}`);
 }
 
 
 //המצרכים למתכון
 export async function api_getIngredients(id) {
-    try {
-        const res = await fetch(`https://api.spoonacular.com/recipes/${id}/ingredientWidget.json?apiKey=${API_KEY}`);
-        const data = await res.json();
-        return data.ingredients;
-    } catch (err) {
-        console.error(err);
-    }
+    const data = await requestJson(`https://api.spoonacular.com/recipes/${id}/ingredientWidget.json?apiKey=${API_KEY}`);
+    return data.ingredients;
 }
 
 
 //תחליפים למצרכים
 export async function apiSubstitutes(id) {
-    console.log(id);
-    //    fetch(`https://api.spoonacular.com/food/ingredients/substitutes?ingredientName=${ingredientName}&apiKey=${API_KEY}`)//מחפש לפי שם
-    try {
-        const res = await fetch(`https://api.spoonacular.com/food/ingredients/${id}/substitutes?apiKey=${API_KEY}`);//מחפש לפי מספר מזהה
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
+    return requestJson(`https://api.spoonacular.com/food/ingredients/${id}/substitutes?apiKey=${API_KEY}`);
 }
 
 
 //הגרלה=================================================================================================================================================
 //מחזיר מתכון בהגרלה
 export async function api_random(number = 1) {
-    try {
-        const res = await fetch(`https://api.spoonacular.com/recipes/random?number=${number}&includeNutrition=true&apiKey=${API_KEY}`);
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
+    return requestJson(`https://api.spoonacular.com/recipes/random?number=${number}&includeNutrition=true&apiKey=${API_KEY}`);
 
     /*return [
         {
@@ -127,14 +122,7 @@ export async function api_random(number = 1) {
 //בדיחה========================================================================================================================================
 //בדיחה
 export async function api_random_jokes() {
-    try {
-        const res = await fetch(`https://api.spoonacular.com/food/jokes/random?apiKey=${API_KEY}`);
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
-
+    return requestJson(`https://api.spoonacular.com/food/jokes/random?apiKey=${API_KEY}`);
 }
 
 
@@ -143,25 +131,13 @@ export async function api_random_jokes() {
 //החיפוש========================================================================================================================================
 //שורת החיפוש
 export async function api_SearchRecipes(query, number = 6) {
-    try {
-        const res = await fetch(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=${number}&addRecipeNutrition=true&apiKey=${API_KEY}`);
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
+    return requestJson(`https://api.spoonacular.com/recipes/complexSearch?query=${encodeURIComponent(query)}&number=${number}&addRecipeNutrition=true&apiKey=${API_KEY}`);
 }
 
 
 //השלמה אוטומטית למתכונים
 export async function api_RecipeSuggest(query) {
-    try {
-        const res = await fetch(`https://api.spoonacular.com/recipes/autocomplete?number=10&query=${query}&apiKey=${API_KEY}`);
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
+    return requestJson(`https://api.spoonacular.com/recipes/autocomplete?number=10&query=${encodeURIComponent(query)}&apiKey=${API_KEY}`);
 }
 
 
@@ -170,21 +146,14 @@ export async function api_RecipeSuggest(query) {
 //פינת המשחקים==================================================================================================================================================
 //מחזיר את כל הטעמים במנה
 export async function api_getTaste(id) {
-    const res = await fetch(
-        `https://api.spoonacular.com/recipes/${id}/tasteWidget.json?apiKey=${API_KEY}`
-    );
-    const data = await res.json();
-    return data;
+    return requestJson(`https://api.spoonacular.com/recipes/${id}/tasteWidget.json?apiKey=${API_KEY}`);
 }
 
 //מחזיר תמונה של הטעמים במתכון
 export async function api_tasteWidget_png(recipe) {
-    try {
-        const res = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/tasteWidget.png?apiKey=${API_KEY}`);
-        return res.url;
-    } catch (err) {
-        console.error(err);
-    }
+    const res = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/tasteWidget.png?apiKey=${API_KEY}`);
+    if (!res.ok) throw new Error(`Taste chart request failed (HTTP ${res.status}).`);
+    return res.url;
 }
 
 
@@ -193,13 +162,7 @@ export async function api_tasteWidget_png(recipe) {
 //ניחוש מידע תזונתי לפי כותרת
 //להוסיף title================================================================
 export async function api_guessNutrition(title) {
-    try {
-        const res = await fetch(`https://api.spoonacular.com/recipes/guessNutrition?title=${title}&apiKey=${API_KEY}`);
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
+    return requestJson(`https://api.spoonacular.com/recipes/guessNutrition?title=${encodeURIComponent(title)}&apiKey=${API_KEY}`);
     /*return {
         "calories": {
             "confidenceRange95Percent": {

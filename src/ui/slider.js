@@ -3,14 +3,59 @@ import { information } from './information.js';
 
 const brandTrack = document.getElementById('brand-track');
 const brandTitle = document.getElementById('brand-title');
-brandTitle.innerText = 'מה נכין היום ?';//בשביל מתכונים דומים שיהיה אפשר לשנות לכן זה פה
+brandTitle.innerText = 'Most Popular This Month';
+
+const randomRecipeGrid = document.getElementById('random-recipe-grid');
+
+async function printRandomRecipeGrid(numberOfRecipes = 8) {
+    try {
+        const data = await api_random(numberOfRecipes);
+        if (!Array.isArray(data?.recipes) || data.recipes.length === 0) {
+            throw new Error('No recipes were returned.');
+        }
+
+        data.recipes.forEach((recipe) => {
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'random-recipe-card';
+            card.setAttribute('aria-label', `View recipe: ${recipe.title}`);
+
+            const image = document.createElement('img');
+            image.src = recipe.image;
+            image.alt = recipe.title || 'Recipe';
+            image.loading = 'lazy';
+
+            const title = document.createElement('span');
+            title.className = 'random-recipe-title';
+            title.textContent = recipe.title || 'Untitled recipe';
+
+            card.append(image, title);
+            card.addEventListener('click', () => information(recipe.id));
+            randomRecipeGrid.appendChild(card);
+        });
+    } catch (error) {
+        const message = document.createElement('p');
+        message.className = 'random-grid-message';
+        message.textContent = `Recipes could not be loaded: ${error.message}`;
+        randomRecipeGrid.appendChild(message);
+    }
+}
 
 export async function printSlider(numberOfRecipes = 10) {
-    const arr_recipes = await api_random(numberOfRecipes);
-
-    console.log(arr_recipes);
     const brandGroup = document.createElement('div');
     brandGroup.classList.add('brand-group');
+    let arr_recipes;
+    try {
+        arr_recipes = await api_random(numberOfRecipes);
+    } catch (error) {
+        const message = document.createElement('p');
+        message.classList.add('message');
+        message.textContent = `Recipes could not be loaded: ${error.message}`;
+        brandGroup.appendChild(message);
+        return brandGroup;
+    }
+
+    console.log(arr_recipes);
 
     if (arr_recipes.status === 'failure') {
         const noResults = document.createElement("div");
@@ -20,7 +65,7 @@ export async function printSlider(numberOfRecipes = 10) {
             <span class="chef">👨‍🍳</span>
             <span class="food">🍕</span>
         </div>
-        <p class="message">לא מצאנו את מה שחיפשת... הטבח עדיין מחפש אותו!</p>`;
+        <p class="message">We couldn't find that recipe. The kitchen is still looking!</p>`;
         brandGroup.appendChild(noResults);
         return brandGroup;
     }
@@ -54,5 +99,6 @@ export async function printSlider(numberOfRecipes = 10) {
 
 const arr = await printSlider();
 brandTrack.appendChild(arr);
+printRandomRecipeGrid();
 
 

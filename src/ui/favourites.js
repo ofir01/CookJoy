@@ -5,7 +5,6 @@ import { information } from './information.js';
 //המועדפים
 const but_cookbook = document.getElementById('but_cookbook');
 const result_cookbook = document.getElementById('result_cookbook');
-const close_btn = document.getElementById('close-btn');
 const but_Ingredients = document.getElementById('but_Ingredients');
 const div_cookbook = document.getElementById('div_cookbook');
 
@@ -50,9 +49,20 @@ but_Ingredients.addEventListener('click', () => {
 });
 
 
-close_btn.addEventListener('click', () => {
-    result_cookbook.classList.toggle('open');
-})
+document.addEventListener('click', (event) => {
+    if (!result_cookbook.classList.contains('open')) return;
+    if (result_cookbook.contains(event.target)) return;
+    if (but_cookbook.contains(event.target) || but_Ingredients.contains(event.target)) return;
+    result_cookbook.classList.remove('open');
+    currentOpener = null;
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && result_cookbook.classList.contains('open')) {
+        result_cookbook.classList.remove('open');
+        currentOpener = null;
+    }
+});
 
 
 //==================================================================================================================================
@@ -170,25 +180,28 @@ export function loadRecipes() {
     // שליפת כל המתכונים
     let recipes = loadDataRecipes(); //{1950:{},1800:{}} כך זה נראה
     //console.log(recipes);
-    const heading = document.createElement('h2');
-    heading.classList.add('ingredients-heading');
-    heading.textContent = 'מתכונים שמורים במועדפים';
+    const heading = createDrawerHeading('Saved recipes');
     div_cookbook.appendChild(heading);
 
+    if (!Object.keys(recipes).length) {
+        const empty = document.createElement('div');
+        empty.className = 'drawer-empty';
+        empty.innerHTML = '<span class="drawer-empty-icon" aria-hidden="true">♡</span><h3>Your recipe box is empty</h3><p>Save recipes you love and they will be waiting for you here.</p>';
+        div_cookbook.appendChild(empty);
+        return;
+    }
+
     if (Object.keys(recipes).length > 0) {
-        const clear = document.createElement('div');
-        clear.textContent = 'נקה הכל'
-        clear.classList.add('clear');
-        clear.addEventListener('click', () => {
-            clearAllRecipes();
-        });
-        div_cookbook.appendChild(clear);
+        addClearButton(heading, clearAllRecipes);
     }
 
 
     for (let key in recipes) {
+        const savedRecipe = document.createElement('article');
+        savedRecipe.classList.add('saved-recipe-card');
+
         const imageWrapper = document.createElement('div');
-        imageWrapper.classList.add('information-imageWrapper');
+        imageWrapper.classList.add('saved-recipe-image-wrap');
 
         const img_cookbook = document.createElement('img');
         img_cookbook.classList.add('img_cookbook');
@@ -206,9 +219,15 @@ export function loadRecipes() {
             deleteRecipe(key); // הסרה מהמועדפים
         });
 
+        const title = document.createElement('h3');
+        title.classList.add('saved-recipe-title');
+        title.textContent = recipes[key].title || 'Saved recipe';
+
         imageWrapper.appendChild(img_cookbook);
         imageWrapper.appendChild(favorite);
-        div_cookbook.appendChild(imageWrapper);
+        savedRecipe.appendChild(imageWrapper);
+        savedRecipe.appendChild(title);
+        div_cookbook.appendChild(savedRecipe);
     }
 
 }
@@ -220,20 +239,20 @@ export function loadIngredients() {
     div_cookbook.innerHTML = '';  // ניקוי התוכן לפני הוספה מחדש
     const Ingredients = loadDataIngredients();
 
-    const heading = document.createElement('h2');
-    heading.classList.add('ingredients-heading');
-    heading.textContent = 'רשימת מצרכים לקניה';
+    const heading = createDrawerHeading('Shopping list');
     div_cookbook.appendChild(heading);
+
+    if (!Object.keys(Ingredients).length) {
+        const empty = document.createElement('div');
+        empty.className = 'drawer-empty';
+        empty.innerHTML = '<span class="drawer-empty-icon" aria-hidden="true">✓</span><h3>Your list is clear</h3><p>Add ingredients from any recipe and they will appear here.</p>';
+        div_cookbook.appendChild(empty);
+        return;
+    }
 
 
     if (Object.keys(Ingredients).length > 0) {
-        const clear = document.createElement('div');
-        clear.textContent = 'נקה הכל'
-        clear.classList.add('clear');
-        clear.addEventListener('click', () => {
-            clearAllIngredients();
-        });
-        div_cookbook.appendChild(clear);
+        addClearButton(heading, clearAllIngredients);
     }
 
     for (let key in Ingredients) {
@@ -271,6 +290,25 @@ export function loadIngredients() {
             saveIngredients({ [key]: parseFloat(input.value - values) });
         });
     }
+}
+
+function createDrawerHeading(label) {
+    const header = document.createElement('div');
+    header.className = 'drawer-header';
+    const heading = document.createElement('h2');
+    heading.className = 'ingredients-heading';
+    heading.textContent = label;
+    header.appendChild(heading);
+    return header;
+}
+
+function addClearButton(header, clearAction) {
+    const clear = document.createElement('button');
+    clear.type = 'button';
+    clear.textContent = 'Clear all';
+    clear.className = 'clear';
+    clear.addEventListener('click', clearAction);
+    header.appendChild(clear);
 }
 
 

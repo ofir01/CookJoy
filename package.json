@@ -13,6 +13,7 @@
   "description": "",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "baseline-browser-mapping": "^2.11.34",
     "css-loader": "^7.1.2",
     "gh-pages": "^6.3.0",
     "html-loader": "^5.1.0",
